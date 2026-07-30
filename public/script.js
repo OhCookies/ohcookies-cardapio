@@ -9,6 +9,8 @@ const STORE = {
   instagram: "@ohcookie.s",
   minimumOrder: 0,
   creditCardFeeRate: 0.042, // taxa descontada sobre o valor total cobrado
+  inventoryCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-sfB08jUIJaKm2mCpajcdJnIXrdfhbHbaF4ve3ZsnQLzlc48uK4wOxaK-tmvaZhWEzMFHd6Ek2M1l/pub?gid=292180600&single=true&output=csv",
+  inventoryRefreshMinutes: 2,
   openingHours: {
     // 0 = domingo, 1 = segunda ... 6 = sábado
     0: { open: "13:00", close: "18:00" },
@@ -39,6 +41,7 @@ const PRODUCTS = [
     description: "Massa tradicional com gotas de chocolate ao blend.",
     price: 8,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-tradicional.jpg"
   },
   {
@@ -48,6 +51,7 @@ const PRODUCTS = [
     description: "Massa tradicional com gotas de chocolate blend, recheada com Nutella original.",
     price: 10,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-nutella.jpg"
   },
   {
@@ -57,6 +61,7 @@ const PRODUCTS = [
     description: "Massa amanteigada de chocolate 100% cacau, recheada com brigadeiro cremoso de leite Ninho e Nutella.",
     price: 10,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-ninho-nutella.jpg"
   },
   {
@@ -66,6 +71,7 @@ const PRODUCTS = [
     description: "Massa amanteigada vermelha com gotas de chocolate branco, recheada com brigadeiro cremoso de leite Ninho.",
     price: 10,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-red-velvet.jpg"
   },
   {
@@ -75,6 +81,7 @@ const PRODUCTS = [
     description: "Massa black com gotas de chocolate blend e chocolate branco, recheada com creme de chocolate branco.",
     price: 10,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-black-white.jpg"
   },
   {
@@ -84,6 +91,7 @@ const PRODUCTS = [
     description: "Massa black com gotas de chocolate blend e chocolate branco, finalizada com biscoito Oreo.",
     price: 10,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-oreo.jpg"
   },
   {
@@ -93,6 +101,7 @@ const PRODUCTS = [
     description: "Massa tradicional com gotas de chocolate blend, recheada com creme crocante de Ovomaltine.",
     price: 11,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-ovomaltine.jpg"
   },
   {
@@ -102,6 +111,7 @@ const PRODUCTS = [
     description: "Massa tradicional com gotas de chocolate branco e pedaços de pistache, recheada com creme cremoso de pistache.",
     price: 15,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-pistachela.jpg"
   },
   {
@@ -111,6 +121,7 @@ const PRODUCTS = [
     description: "Massa tradicional com gotas de chocolate blend, recheada com pedaço de brownie e Nutella.",
     price: 12,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-brookie-nutella.jpg"
   },
   {
@@ -120,6 +131,7 @@ const PRODUCTS = [
     description: "Massa tradicional com gotas de chocolate blend e chocolate branco, recheada com creme Bueno e finalizada com Kinder Bueno White.",
     price: 12,
     stock: null,
+    availability: "Disponível",
     image: "imagens/cookie-kinder.jpg"
   }
 ];
@@ -181,6 +193,143 @@ function updateStoreStatus() {
   }
 }
 
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let value = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const next = text[i + 1];
+
+    if (char === '"' && inQuotes && next === '"') {
+      value += '"';
+      i++;
+    } else if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      row.push(value);
+      value = "";
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && next === '\n') i++;
+      row.push(value);
+      if (row.some(cell => cell.trim() !== "")) rows.push(row);
+      row = [];
+      value = "";
+    } else {
+      value += char;
+    }
+  }
+
+  row.push(value);
+  if (row.some(cell => cell.trim() !== "")) rows.push(row);
+  return rows;
+}
+
+function parseBrazilianPrice(value) {
+  if (!value) return null;
+  const normalized = value
+    .replace(/R\$/gi, "")
+    .replace(/\s/g, "")
+    .replace(/\./g, "")
+    .replace(",", ".");
+  const number = Number(normalized);
+  return Number.isFinite(number) ? number : null;
+}
+
+function normalizeAvailability(value) {
+  const text = String(value || "Disponível").trim().toLowerCase();
+  if (text === "esgotado") return "Esgotado";
+  if (text === "pausado") return "Pausado";
+  return "Disponível";
+}
+
+function reconcileCartWithStock() {
+  let changed = false;
+
+  Object.keys(cart).forEach(id => {
+    const product = PRODUCTS.find(item => item.id === id);
+    if (!product) {
+      delete cart[id];
+      changed = true;
+      return;
+    }
+
+    const unavailable = product.availability !== "Disponível" || product.stock === 0;
+    if (unavailable) {
+      delete cart[id];
+      changed = true;
+      return;
+    }
+
+    if (product.stock !== null && cart[id] > product.stock) {
+      cart[id] = product.stock;
+      changed = true;
+    }
+  });
+
+  if (changed) updateCart();
+}
+
+async function loadInventoryFromSheet() {
+  try {
+    const separator = STORE.inventoryCsvUrl.includes("?") ? "&" : "?";
+    const response = await fetch(`${STORE.inventoryCsvUrl}${separator}t=${Date.now()}`, {
+      cache: "no-store"
+    });
+
+    if (!response.ok) throw new Error(`Falha ao carregar estoque: ${response.status}`);
+
+    const csvText = await response.text();
+    const rows = parseCsv(csvText);
+    const headerIndex = rows.findIndex(row =>
+      row.some(cell => cell.trim().toLowerCase() === "id") &&
+      row.some(cell => cell.trim().toLowerCase() === "estoque")
+    );
+
+    if (headerIndex === -1) throw new Error("Cabeçalho da planilha não encontrado.");
+
+    const headers = rows[headerIndex].map(cell => cell.trim().toLowerCase());
+    const index = {
+      id: headers.indexOf("id"),
+      name: headers.indexOf("produto"),
+      category: headers.indexOf("categoria"),
+      price: headers.indexOf("preço"),
+      stock: headers.indexOf("estoque"),
+      availability: headers.indexOf("disponibilidade"),
+      description: headers.indexOf("descrição")
+    };
+
+    rows.slice(headerIndex + 1).forEach(row => {
+      const id = (row[index.id] || "").trim();
+      if (!id) return;
+
+      const product = PRODUCTS.find(item => item.id === id);
+      if (!product) return;
+
+      const stockText = (row[index.stock] || "").trim();
+      const parsedStock = stockText === "" ? null : Number(stockText.replace(",", "."));
+      const price = parseBrazilianPrice(row[index.price]);
+
+      product.stock = Number.isFinite(parsedStock) ? Math.max(0, Math.floor(parsedStock)) : null;
+      product.availability = normalizeAvailability(row[index.availability]);
+
+      if (price !== null) product.price = price;
+      if (index.name >= 0 && row[index.name]?.trim()) product.name = row[index.name].trim();
+      if (index.category >= 0 && row[index.category]?.trim()) product.category = row[index.category].trim();
+      if (index.description >= 0 && row[index.description]?.trim()) product.description = row[index.description].trim();
+    });
+
+    reconcileCartWithStock();
+    renderFilters();
+    renderProducts();
+  } catch (error) {
+    console.error("Não foi possível atualizar o estoque pela planilha.", error);
+  }
+}
+
 function getCategories() {
   return ["Todos", ...new Set(PRODUCTS.map(product => product.category))];
 }
@@ -204,8 +353,11 @@ function renderFilters() {
 }
 
 function stockText(product) {
+  if (product.availability === "Pausado") return { text: "Indisponível", className: "out" };
+  if (product.availability === "Esgotado" || product.stock === 0) {
+    return { text: "Esgotado", className: "out" };
+  }
   if (product.stock === null) return { text: "Disponível", className: "" };
-  if (product.stock <= 0) return { text: "Esgotado", className: "out" };
   if (product.stock <= 3) return { text: `Últimas ${product.stock} unidades`, className: "low" };
   return { text: `${product.stock} disponíveis`, className: "" };
 }
@@ -234,8 +386,8 @@ function renderProducts() {
           <div class="product-footer">
             <strong class="product-price">${money(product.price)}</strong>
             <button class="add-button" type="button" data-product="${product.id}"
-              ${product.stock !== null && product.stock <= 0 ? "disabled" : ""}>
-              ${product.stock !== null && product.stock <= 0 ? "Esgotado" : "Adicionar"}
+              ${product.availability !== "Disponível" || product.stock === 0 ? "disabled" : ""}>
+              ${product.availability === "Pausado" ? "Indisponível" : (product.availability === "Esgotado" || product.stock === 0 ? "Esgotado" : "Adicionar")}
             </button>
           </div>
         </div>
@@ -252,6 +404,11 @@ function addToCart(id) {
   const product = PRODUCTS.find(item => item.id === id);
   const current = cart[id] || 0;
 
+  if (product.availability !== "Disponível" || product.stock === 0) {
+    alert(`${product.name} está indisponível no momento.`);
+    return;
+  }
+
   if (product.stock !== null && current >= product.stock) {
     alert(`Só temos ${product.stock} unidade(s) disponível(is) de ${product.name}.`);
     return;
@@ -267,7 +424,7 @@ function changeQuantity(id, amount) {
 
   if (next <= 0) {
     delete cart[id];
-  } else if (product.stock === null || next <= product.stock) {
+  } else if (product.availability === "Disponível" && (product.stock === null || next <= product.stock)) {
     cart[id] = next;
   }
   updateCart();
@@ -471,4 +628,6 @@ renderFilters();
 renderProducts();
 updateCart();
 setMinimumDate();
+loadInventoryFromSheet();
 setInterval(updateStoreStatus, 60_000);
+setInterval(loadInventoryFromSheet, STORE.inventoryRefreshMinutes * 60_000);

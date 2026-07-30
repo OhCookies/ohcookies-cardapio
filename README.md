@@ -126,3 +126,20 @@ Para receber o valor integral dos produtos após o desconto de 4,2%, o total no 
 `valor no cartão = valor dos produtos / (1 - 0,042)`
 
 Exemplo: para receber R$ 20,00, o cliente paga R$ 20,88.
+
+
+## Estoque conectado ao Google Planilhas
+
+O cardápio está conectado a esta planilha publicada:
+
+`https://docs.google.com/spreadsheets/d/e/2PACX-1vT-sfB08jUIJaKm2mCpajcdJnIXrdfhbHbaF4ve3ZsnQLzlc48uK4wOxaK-tmvaZhWEzMFHd6Ek2M1l/pub?gid=292180600&single=true&output=csv`
+
+O site consulta a planilha ao abrir e repete a atualização a cada 2 minutos.
+
+Regras:
+- `Disponível` + estoque maior que 0: produto pode ser comprado;
+- `Disponível` + estoque vazio: aparece apenas como disponível, sem limite numérico;
+- estoque `0`: aparece como esgotado;
+- `Esgotado`: bloqueia o produto;
+- `Pausado`: mostra o produto como indisponível;
+- não altere os valores da coluna `ID`.
