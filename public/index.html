@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#6f3f2d" />
+  <meta name="description" content="Cardápio digital da Ohcookies" />
+  <title>Ohcookies | Cardápio Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <nav class="topbar container">
+      <a class="brand" href="#inicio" aria-label="Ohcookies">
+        <span class="brand-main">OHCOOKIES</span>
+        <span class="brand-sub">confeitaria artesanal</span>
+      </a>
+      <a class="instagram-link" href="https://instagram.com/ohcookie.s" target="_blank" rel="noreferrer">
+        @ohcookie.s
+      </a>
+    </nav>
+
+    <div class="container hero-content" id="inicio">
+      <div>
+        <span class="eyebrow">Cookies artesanais feitos com carinho</span>
+        <h1>Seu momento fica melhor com cookie.</h1>
+        <p class="hero-text">
+          Escolha seus sabores, monte o pedido e finalize diretamente pelo WhatsApp.
+        </p>
+        <div class="status-wrap">
+          <span id="storeStatus" class="store-status">Verificando horário...</span>
+          <span id="nextOpening" class="next-opening"></span>
+        </div>
+      </div>
+      <div class="cookie-art" aria-hidden="true">
+        <span class="cookie cookie-one">🍪</span>
+        <span class="cookie cookie-two">🍪</span>
+        <span class="cookie cookie-three">🍪</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="info-strip">
+      <div class="container info-grid">
+        <article>
+          <span>🕒</span>
+          <div>
+            <strong>Horário</strong>
+            <small id="todayHours">Consulte abaixo</small>
+          </div>
+        </article>
+        <article>
+          <span>📍</span>
+          <div>
+            <strong>Retirada</strong>
+            <small>Endereço enviado após a confirmação</small>
+          </div>
+        </article>
+        <article>
+          <span>🛵</span>
+          <div>
+            <strong>Entrega</strong>
+            <small>Uber Envios ou 99Entrega</small>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="menu-section container" id="cardapio">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Escolha seus favoritos</span>
+          <h2>Nosso cardápio</h2>
+        </div>
+        <button class="cart-shortcut" type="button" id="cartShortcut">
+          Sacola <span id="cartCount">0</span>
+        </button>
+      </div>
+
+      <div class="category-filters" id="categoryFilters" aria-label="Categorias"></div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section class="how-it-works">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Simples e rápido</span>
+            <h2>Como receber</h2>
+          </div>
+        </div>
+        <div class="steps-grid">
+          <article>
+            <span class="step-number">1</span>
+            <h3>Retirada</h3>
+            <p>Você retira o pedido no local e horário combinados.</p>
+          </article>
+          <article>
+            <span class="step-number">2</span>
+            <h3>Ohcookies solicita</h3>
+            <p>Consultamos Uber/99, informamos a taxa e solicitamos após sua confirmação.</p>
+          </article>
+          <article>
+            <span class="step-number">3</span>
+            <h3>Cliente solicita</h3>
+            <p>Avisamos quando estiver pronto e você envia o motorista para a retirada.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <section class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <header class="drawer-header">
+        <div>
+          <span class="eyebrow">Revise seu pedido</span>
+          <h2 id="cartTitle">Sua sacola</h2>
+        </div>
+        <button class="icon-button" id="closeCart" type="button" aria-label="Fechar sacola">×</button>
+      </header>
+
+      <div class="drawer-body">
+        <div id="cartItems" class="cart-items"></div>
+        <div id="emptyCart" class="empty-cart">
+          <span>🍪</span>
+          <p>Sua sacola está vazia.</p>
+        </div>
+
+        <div class="checkout-form" id="checkoutForm">
+          <div class="total-row">
+            <span>Total dos produtos</span>
+            <strong id="cartTotal">R$ 0,00</strong>
+          </div>
+
+          <label>
+            Seu nome
+            <input id="customerName" type="text" placeholder="Digite seu nome" />
+          </label>
+
+          <label>
+            Data desejada
+            <input id="orderDate" type="date" />
+          </label>
+
+          <label>
+            Horário desejado
+            <input id="orderTime" type="time" />
+          </label>
+
+          <fieldset>
+            <legend>Como deseja receber?</legend>
+            <label class="radio-card">
+              <input type="radio" name="delivery" value="Retirada no local" checked />
+              <span><strong>Retirada no local</strong><small>Endereço após confirmação</small></span>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="delivery" value="Ohcookies solicita Uber/99" />
+              <span><strong>Ohcookies solicita Uber/99</strong><small>Taxa consultada separadamente</small></span>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="delivery" value="Cliente solicita Uber/99" />
+              <span><strong>Eu solicito Uber/99</strong><small>Você envia o motorista</small></span>
+            </label>
+          </fieldset>
+
+          <div id="addressFields" class="address-fields hidden">
+            <label>
+              Endereço completo
+              <input id="customerAddress" type="text" placeholder="Rua, número e complemento" />
+            </label>
+            <label>
+              Bairro e ponto de referência
+              <input id="customerReference" type="text" placeholder="Bairro e referência" />
+            </label>
+          </div>
+
+          <label>
+            Forma de pagamento
+            <select id="paymentMethod">
+              <option value="">Selecione</option>
+              <option>PIX</option>
+              <option>Dinheiro</option>
+              <option>Combinar pelo WhatsApp</option>
+            </select>
+          </label>
+
+          <label>
+            Observações
+            <textarea id="orderNotes" rows="3" placeholder="Ex.: sem embalagem para presente, horário aproximado..."></textarea>
+          </label>
+
+          <p class="delivery-note">
+            A taxa de entrega não está incluída no total. Ela varia conforme endereço, horário e disponibilidade do aplicativo.
+          </p>
+
+          <button id="finishOrder" class="primary-button" type="button">
+            Finalizar pelo WhatsApp
+          </button>
+          <p id="formMessage" class="form-message" role="alert"></p>
+        </div>
+      </div>
+    </section>
+  </aside>
+
+  <button class="floating-cart" id="floatingCart" type="button" aria-label="Abrir sacola">
+    <span>🛍️</span>
+    <span>Ver sacola</span>
+    <strong id="floatingTotal">R$ 0,00</strong>
+  </button>
+
+  <footer>
+    <div class="container footer-content">
+      <div class="brand footer-brand">
+        <span class="brand-main">OHCOOKIES</span>
+        <span class="brand-sub">confeitaria artesanal</span>
+      </div>
+      <p>Feito artesanalmente em Niterói • Pedidos pelo WhatsApp</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
