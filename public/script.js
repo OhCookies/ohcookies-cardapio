@@ -8,6 +8,7 @@ const STORE = {
   timezone: "America/Sao_Paulo",
   instagram: "@ohcookie.s",
   minimumOrder: 0,
+  creditCardFeeRate: 0.042,
   openingHours: {
     // 0 = domingo, 1 = segunda ... 6 = sábado
     0: { open: "13:00", close: "18:00" },
@@ -32,58 +33,67 @@ const STORE = {
 
 const PRODUCTS = [
   {
+    id: "tradicional",
+    name: "Cookie Tradicional",
+    category: "Tradicionais",
+    description: "Massa tradicional com gotas de chocolate ao blend.",
+    price: 8,
+    stock: null,
+    image: "imagens/cookie-tradicional.jpg"
+  },
+  {
     id: "nutella",
     name: "Cookie Nutella",
-    category: "Recheados",
+    category: "Tradicionais",
     description: "Cookie artesanal com recheio cremoso de Nutella.",
     price: 10,
     stock: null,
-    image: ""
+    image: "imagens/cookie-nutella.jpg"
   },
   {
     id: "ninho-nutella",
     name: "Cookie Ninho c/ Nutella",
-    category: "Recheados",
+    category: "Tradicionais",
     description: "Massa artesanal com leite Ninho e recheio cremoso de Nutella.",
     price: 10,
     stock: null,
-    image: ""
+    image: "imagens/cookie-ninho-nutella.jpg"
   },
   {
     id: "red-velvet",
     name: "Cookie Red Velvet",
-    category: "Especiais",
+    category: "Tradicionais",
     description: "Massa red velvet macia com recheio branco cremoso.",
     price: 10,
     stock: null,
-    image: ""
+    image: "imagens/cookie-red-velvet.jpg"
   },
   {
     id: "black-white",
     name: "Cookie Black & White",
-    category: "Especiais",
+    category: "Tradicionais",
     description: "Cookie de chocolate com recheio branco cremoso.",
     price: 10,
     stock: null,
-    image: ""
+    image: "imagens/cookie-black-white.jpg"
   },
   {
     id: "oreo",
     name: "Cookie Oreo",
-    category: "Especiais",
+    category: "Tradicionais",
     description: "Massa artesanal com pedaços de biscoito Oreo e recheio cremoso.",
     price: 10,
     stock: null,
-    image: ""
+    image: "imagens/cookie-oreo.jpg"
   },
   {
     id: "ovomaltine",
     name: "Cookie Ovomaltine",
-    category: "Especiais",
+    category: "Premium",
     description: "Cookie crocante e cremoso com o sabor marcante de Ovomaltine.",
     price: 11,
     stock: null,
-    image: ""
+    image: "imagens/cookie-ovomaltine.jpg"
   },
   {
     id: "pistachela",
@@ -92,7 +102,7 @@ const PRODUCTS = [
     description: "Massa com chocolate branco e pistache, recheada com creme de pistache.",
     price: 15,
     stock: null,
-    image: ""
+    image: "imagens/cookie-pistachela.jpg"
   },
   {
     id: "brookie",
@@ -101,7 +111,7 @@ const PRODUCTS = [
     description: "Cookie com recheio de brownie e Nutella.",
     price: 12,
     stock: null,
-    image: ""
+    image: "imagens/cookie-brookie-nutella.jpg"
   },
   {
     id: "kinder",
@@ -110,7 +120,7 @@ const PRODUCTS = [
     description: "Cookie artesanal inspirado no chocolate Kinder, com recheio cremoso.",
     price: 12,
     stock: null,
-    image: ""
+    image: "imagens/cookie-kinder.jpg"
   }
 ];
 
@@ -275,6 +285,27 @@ function cartSummary() {
   });
 }
 
+function updatePaymentTotals() {
+  const items = cartSummary();
+  const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
+  const payment = document.getElementById("paymentMethod")?.value || "";
+  const isCreditCard = payment === "Cartão de crédito (taxa de 4,2%)";
+  const fee = isCreditCard ? subtotal * STORE.creditCardFeeRate : 0;
+  const finalTotal = subtotal + fee;
+
+  const feeLine = document.getElementById("cardFeeLine");
+  const finalLine = document.getElementById("finalTotalLine");
+
+  if (feeLine && finalLine) {
+    feeLine.classList.toggle("hidden", !isCreditCard);
+    finalLine.classList.toggle("hidden", !isCreditCard);
+    document.getElementById("cardFee").textContent = money(fee);
+    document.getElementById("finalTotal").textContent = money(finalTotal);
+  }
+
+  return { subtotal, fee, finalTotal, isCreditCard };
+}
+
 function updateCart() {
   const items = cartSummary();
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -283,6 +314,7 @@ function updateCart() {
   document.getElementById("cartCount").textContent = count;
   document.getElementById("cartTotal").textContent = money(total);
   document.getElementById("floatingTotal").textContent = money(total);
+  updatePaymentTotals();
   document.getElementById("floatingCart").classList.toggle("visible", count > 0);
   document.getElementById("emptyCart").style.display = count ? "none" : "block";
   document.getElementById("checkoutForm").classList.toggle("visible", count > 0);
@@ -365,7 +397,7 @@ function finishOrder() {
   }
 
   const items = cartSummary();
-  const total = items.reduce((sum, item) => sum + item.subtotal, 0);
+  const totals = updatePaymentTotals();
   const delivery = document.querySelector('input[name="delivery"]:checked').value;
   const dateRaw = document.getElementById("orderDate").value;
   const [year, month, day] = dateRaw.split("-");
@@ -380,7 +412,13 @@ function finishOrder() {
     "*Itens:*",
     ...items.map(item => `• ${item.quantity}x ${item.name} — ${money(item.subtotal)}`),
     "",
-    `*Total dos produtos:* ${money(total)}`,
+    `*Total dos produtos:* ${money(totals.subtotal)}`,
+    ...(totals.isCreditCard
+      ? [
+          `*Taxa do cartão (4,2%):* ${money(totals.fee)}`,
+          `*Total com cartão:* ${money(totals.finalTotal)}`
+        ]
+      : []),
     `*Data desejada:* ${formattedDate}`,
     `*Horário desejado:* ${document.getElementById("orderTime").value}`,
     `*Recebimento:* ${delivery}`,
@@ -398,6 +436,7 @@ function finishOrder() {
 
   lines.push(
     "",
+    ...(totals.isCreditCard ? ["_Pagamento no cartão inclui taxa de 4,2%._"] : []),
     "_A taxa de entrega será confirmada separadamente._",
     "",
     "Aguardo a confirmação do pedido 😊"
@@ -421,6 +460,7 @@ document.getElementById("cartShortcut").addEventListener("click", openCart);
 document.getElementById("floatingCart").addEventListener("click", openCart);
 document.getElementById("closeCart").addEventListener("click", closeCart);
 document.getElementById("drawerOverlay").addEventListener("click", closeCart);
+document.getElementById("paymentMethod").addEventListener("change", updatePaymentTotals);
 document.getElementById("finishOrder").addEventListener("click", finishOrder);
 document.querySelectorAll('input[name="delivery"]').forEach(input =>
   input.addEventListener("change", toggleAddressFields)

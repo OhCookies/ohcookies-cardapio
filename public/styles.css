@@ -74,6 +74,30 @@ img { max-width: 100%; }
   letter-spacing: .28em;
   text-transform: uppercase;
 }
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+}
+.site-logo {
+  width: 170px;
+  max-width: 42vw;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,.12));
+  border-radius: 14px;
+}
+.footer-brand-logo {
+  display: inline-flex;
+  align-items: center;
+}
+.footer-logo {
+  width: 130px;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
 .instagram-link {
   color: white;
   text-decoration: none;
@@ -319,12 +343,19 @@ img { max-width: 100%; }
 .total-row {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
   margin: 24px 0;
   padding: 18px;
   border-radius: 18px;
   color: white;
   background: var(--brown);
 }
+.total-row span,
+.total-row small { display: block; }
+.total-row small { margin-top: 6px; color: rgba(255,255,255,.78); }
+.checkout-totals { text-align: right; }
+.checkout-totals > strong { font-size: 18px; }
 .checkout-form label, fieldset { display: block; margin-bottom: 16px; }
 .checkout-form label { font-size: 13px; font-weight: 700; }
 .checkout-form input, .checkout-form select, .checkout-form textarea {

@@ -9,14 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/jpeg" href="imagens/logo-ohcookies.jpg" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="hero">
     <nav class="topbar container">
-      <a class="brand" href="#inicio" aria-label="Ohcookies">
-        <span class="brand-main">OHCOOKIES</span>
-        <span class="brand-sub">confeitaria artesanal</span>
+      <a class="brand brand-logo" href="#inicio" aria-label="Ohcookies">
+        <img src="imagens/logo-ohcookies.jpg" alt="Logo Ohcookies" class="site-logo" />
       </a>
       <a class="instagram-link" href="https://instagram.com/ohcookie.s" target="_blank" rel="noreferrer">
         @ohcookie.s
@@ -134,8 +134,14 @@
 
         <div class="checkout-form" id="checkoutForm">
           <div class="total-row">
-            <span>Total dos produtos</span>
-            <strong id="cartTotal">R$ 0,00</strong>
+            <div>
+              <span>Total dos produtos</span>
+              <small id="cardFeeLine" class="hidden">Taxa do cartão (4,2%): <strong id="cardFee">R$ 0,00</strong></small>
+            </div>
+            <div class="checkout-totals">
+              <strong id="cartTotal">R$ 0,00</strong>
+              <small id="finalTotalLine" class="hidden">Total no cartão: <strong id="finalTotal">R$ 0,00</strong></small>
+            </div>
           </div>
 
           <label>
@@ -185,7 +191,7 @@
             <select id="paymentMethod">
               <option value="">Selecione</option>
               <option>PIX</option>
-              <option>Cartão de crédito (com taxa)</option>
+              <option>Cartão de crédito (taxa de 4,2%)</option>
             </select>
           </label>
 
@@ -215,9 +221,8 @@
 
   <footer>
     <div class="container footer-content">
-      <div class="brand footer-brand">
-        <span class="brand-main">OHCOOKIES</span>
-        <span class="brand-sub">confeitaria artesanal</span>
+      <div class="brand footer-brand footer-brand-logo">
+        <img src="imagens/logo-ohcookies.jpg" alt="Logo Ohcookies" class="footer-logo" />
       </div>
       <p>Feito artesanalmente em Maria Paula, Niterói/RJ • Aceitamos encomendas</p>
     </div>

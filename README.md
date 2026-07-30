@@ -50,3 +50,60 @@ Evite espaços e acentos nos nomes dos arquivos.
 Nesta versão, o estoque é alterado manualmente no arquivo `public/script.js`. Quando um estoque numérico é informado, o site impede que o cliente coloque no carrinho uma quantidade maior do que a disponível.
 
 O pedido é finalizado pelo WhatsApp, portanto o estoque não é descontado automaticamente. Reduza a quantidade depois que o pedido estiver confirmado.
+
+
+## Taxa do cartão
+
+Quando o cliente seleciona **Cartão de crédito (taxa de 4,2%)**, o cardápio calcula automaticamente:
+
+- total dos produtos;
+- taxa de 4,2%;
+- total final no cartão.
+
+Esses valores também são enviados na mensagem do WhatsApp.
+
+
+## Logo da Ohcookies
+
+A logo já foi incluída no projeto em:
+
+`public/imagens/logo-ohcookies.jpg`
+
+Ela foi aplicada:
+- no topo do site;
+- no rodapé;
+- como ícone da aba do navegador (favicon).
+
+Se depois quiser trocar a logo, basta substituir esse arquivo pelo novo, mantendo o mesmo nome.
+
+
+## Imagens dos produtos
+
+A foto do **Cookie Nutella** já foi adicionada em `public/imagens/cookie-nutella.jpg` e vinculada no cardápio.
+
+A foto do **Cookie Red Velvet** já foi adicionada em `public/imagens/cookie-red-velvet.jpg` e vinculada no cardápio.
+
+A foto do **Cookie Ninho c/ Nutella** já foi adicionada em `public/imagens/cookie-ninho-nutella.jpg` e vinculada no cardápio.
+
+A foto do **Cookie Black & White** já foi adicionada em `public/imagens/cookie-black-white.jpg` e vinculada no cardápio.
+
+A foto do **Cookie Kinder** já foi adicionada em `public/imagens/cookie-kinder.jpg` e vinculada no cardápio.
+
+A foto do **Cookie Oreo** já foi adicionada em `public/imagens/cookie-oreo.jpg` e vinculada no cardápio.
+
+A foto do **Cookie Ovomaltine** já foi adicionada em `public/imagens/cookie-ovomaltine.jpg` e vinculada no cardápio.
+
+A foto do **Cookie Pistachela** já foi adicionada em `public/imagens/cookie-pistachela.jpg` e vinculada no cardápio.
+
+A foto do **Brookie Nutella** já foi adicionada em `public/imagens/cookie-brookie-nutella.jpg` e vinculada no cardápio.
+
+O **Cookie Tradicional** foi adicionado ao cardápio por **R$ 8,00**, com a descrição: "Massa tradicional com gotas de chocolate ao blend."
+A foto dele já foi adicionada em `public/imagens/cookie-tradicional.jpg` e vinculada no cardápio.
+
+
+## Categorias do cardápio
+
+Os produtos foram reorganizados assim:
+
+- **Tradicionais:** sabores de R$ 8,00 e R$ 10,00;
+- **Premium:** sabores com valor a partir de R$ 11,00.
