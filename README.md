@@ -107,3 +107,13 @@ Os produtos foram reorganizados assim:
 
 - **Tradicionais:** sabores de R$ 8,00 e R$ 10,00;
 - **Premium:** sabores com valor a partir de R$ 11,00.
+
+
+## Logo transparente
+
+A logo foi atualizada para uma versão com fundo transparente em `public/imagens/logo-ohcookies.png`, aplicada no topo, rodapé e favicon.
+
+
+## Descrições atualizadas
+
+As descrições dos sabores foram revisadas e padronizadas conforme as informações fornecidas pela Ohcookies.

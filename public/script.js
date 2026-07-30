@@ -45,7 +45,7 @@ const PRODUCTS = [
     id: "nutella",
     name: "Cookie Nutella",
     category: "Tradicionais",
-    description: "Cookie artesanal com recheio cremoso de Nutella.",
+    description: "Massa tradicional com gotas de chocolate blend, recheada com Nutella original.",
     price: 10,
     stock: null,
     image: "imagens/cookie-nutella.jpg"
@@ -54,7 +54,7 @@ const PRODUCTS = [
     id: "ninho-nutella",
     name: "Cookie Ninho c/ Nutella",
     category: "Tradicionais",
-    description: "Massa artesanal com leite Ninho e recheio cremoso de Nutella.",
+    description: "Massa amanteigada de chocolate 100% cacau, recheada com brigadeiro cremoso de leite Ninho e Nutella.",
     price: 10,
     stock: null,
     image: "imagens/cookie-ninho-nutella.jpg"
@@ -63,7 +63,7 @@ const PRODUCTS = [
     id: "red-velvet",
     name: "Cookie Red Velvet",
     category: "Tradicionais",
-    description: "Massa red velvet macia com recheio branco cremoso.",
+    description: "Massa amanteigada vermelha com gotas de chocolate branco, recheada com brigadeiro cremoso de leite Ninho.",
     price: 10,
     stock: null,
     image: "imagens/cookie-red-velvet.jpg"
@@ -72,7 +72,7 @@ const PRODUCTS = [
     id: "black-white",
     name: "Cookie Black & White",
     category: "Tradicionais",
-    description: "Cookie de chocolate com recheio branco cremoso.",
+    description: "Massa black com gotas de chocolate blend e chocolate branco, recheada com creme de chocolate branco.",
     price: 10,
     stock: null,
     image: "imagens/cookie-black-white.jpg"
@@ -81,7 +81,7 @@ const PRODUCTS = [
     id: "oreo",
     name: "Cookie Oreo",
     category: "Tradicionais",
-    description: "Massa artesanal com pedaços de biscoito Oreo e recheio cremoso.",
+    description: "Massa black com gotas de chocolate blend e chocolate branco, finalizada com biscoito Oreo.",
     price: 10,
     stock: null,
     image: "imagens/cookie-oreo.jpg"
@@ -90,7 +90,7 @@ const PRODUCTS = [
     id: "ovomaltine",
     name: "Cookie Ovomaltine",
     category: "Premium",
-    description: "Cookie crocante e cremoso com o sabor marcante de Ovomaltine.",
+    description: "Massa tradicional com gotas de chocolate blend, recheada com creme crocante de Ovomaltine.",
     price: 11,
     stock: null,
     image: "imagens/cookie-ovomaltine.jpg"
@@ -99,7 +99,7 @@ const PRODUCTS = [
     id: "pistachela",
     name: "Cookie Pistachela",
     category: "Premium",
-    description: "Massa com chocolate branco e pistache, recheada com creme de pistache.",
+    description: "Massa tradicional com gotas de chocolate branco e pedaços de pistache, recheada com creme cremoso de pistache.",
     price: 15,
     stock: null,
     image: "imagens/cookie-pistachela.jpg"
@@ -108,7 +108,7 @@ const PRODUCTS = [
     id: "brookie",
     name: "Brookie Nutella",
     category: "Premium",
-    description: "Cookie com recheio de brownie e Nutella.",
+    description: "Massa tradicional com gotas de chocolate blend, recheada com pedaço de brownie e Nutella.",
     price: 12,
     stock: null,
     image: "imagens/cookie-brookie-nutella.jpg"
@@ -117,7 +117,7 @@ const PRODUCTS = [
     id: "kinder",
     name: "Cookie Kinder",
     category: "Premium",
-    description: "Cookie artesanal inspirado no chocolate Kinder, com recheio cremoso.",
+    description: "Massa tradicional com gotas de chocolate blend e chocolate branco, recheada com creme Bueno e finalizada com Kinder Bueno White.",
     price: 12,
     stock: null,
     image: "imagens/cookie-kinder.jpg"

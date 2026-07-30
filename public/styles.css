@@ -80,22 +80,20 @@ img { max-width: 100%; }
   align-items: center;
 }
 .site-logo {
-  width: 170px;
+  width: 190px;
   max-width: 42vw;
   height: auto;
   display: block;
   filter: drop-shadow(0 10px 20px rgba(0,0,0,.12));
-  border-radius: 14px;
 }
 .footer-brand-logo {
   display: inline-flex;
   align-items: center;
 }
 .footer-logo {
-  width: 130px;
+  width: 150px;
   height: auto;
   display: block;
-  border-radius: 12px;
 }
 
 .instagram-link {
@@ -268,7 +266,6 @@ img { max-width: 100%; }
 .product-price { color: var(--brown); font-size: 20px; }
 .add-button {
   border: 0;
-  border-radius: 14px;
   padding: 11px 14px;
   color: white;
   background: var(--brown);
@@ -375,7 +372,6 @@ legend { margin-bottom: 10px; font-weight: 700; }
   align-items: center;
   padding: 13px;
   border: 1px solid var(--line);
-  border-radius: 14px;
   background: white;
 }
 .radio-card input { width: auto; margin: 0; }
