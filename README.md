@@ -117,3 +117,12 @@ A logo foi atualizada para uma versão com fundo transparente em `public/imagens
 ## Descrições atualizadas
 
 As descrições dos sabores foram revisadas e padronizadas conforme as informações fornecidas pela Ohcookies.
+
+
+## Cálculo corrigido da taxa do cartão
+
+Para receber o valor integral dos produtos após o desconto de 4,2%, o total no cartão é calculado por dentro:
+
+`valor no cartão = valor dos produtos / (1 - 0,042)`
+
+Exemplo: para receber R$ 20,00, o cliente paga R$ 20,88.

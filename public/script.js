@@ -8,7 +8,7 @@ const STORE = {
   timezone: "America/Sao_Paulo",
   instagram: "@ohcookie.s",
   minimumOrder: 0,
-  creditCardFeeRate: 0.042,
+  creditCardFeeRate: 0.042, // taxa descontada sobre o valor total cobrado
   openingHours: {
     // 0 = domingo, 1 = segunda ... 6 = sábado
     0: { open: "13:00", close: "18:00" },
@@ -290,8 +290,8 @@ function updatePaymentTotals() {
   const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
   const payment = document.getElementById("paymentMethod")?.value || "";
   const isCreditCard = payment === "Cartão de crédito (taxa de 4,2%)";
-  const fee = isCreditCard ? subtotal * STORE.creditCardFeeRate : 0;
-  const finalTotal = subtotal + fee;
+  const finalTotal = isCreditCard ? subtotal / (1 - STORE.creditCardFeeRate) : subtotal;
+  const fee = finalTotal - subtotal;
 
   const feeLine = document.getElementById("cardFeeLine");
   const finalLine = document.getElementById("finalTotalLine");
