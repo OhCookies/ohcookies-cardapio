@@ -14,7 +14,7 @@ Abra `public/script.js` e confirme:
 
 1. Número de WhatsApp em `STORE.whatsapp`;
 2. Dias e horários em `STORE.openingHours`;
-3. Preços e estoques na lista `PRODUCTS`;
+3. Preços e estoques na lista `PRODUCTS` — use `stock: null` para exibir “Disponível”, um número para controlar unidades ou `0` para marcar “Esgotado”;
 4. Nomes e descrições dos produtos.
 
 Os preços e estoques incluídos são apenas um modelo inicial e precisam ser confirmados.
@@ -47,6 +47,6 @@ Evite espaços e acentos nos nomes dos arquivos.
 
 ## Estoque
 
-Nesta versão, o estoque é alterado manualmente no arquivo `public/script.js`. O site impede que o cliente coloque no carrinho uma quantidade maior do que a disponível.
+Nesta versão, o estoque é alterado manualmente no arquivo `public/script.js`. Quando um estoque numérico é informado, o site impede que o cliente coloque no carrinho uma quantidade maior do que a disponível.
 
 O pedido é finalizado pelo WhatsApp, portanto o estoque não é descontado automaticamente. Reduza a quantidade depois que o pedido estiver confirmado.

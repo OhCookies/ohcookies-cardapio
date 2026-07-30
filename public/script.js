@@ -10,13 +10,13 @@ const STORE = {
   minimumOrder: 0,
   openingHours: {
     // 0 = domingo, 1 = segunda ... 6 = sábado
-    0: null,
-    1: { open: "10:00", close: "18:00" },
-    2: { open: "10:00", close: "18:00" },
-    3: { open: "10:00", close: "18:00" },
-    4: { open: "10:00", close: "18:00" },
-    5: { open: "10:00", close: "18:00" },
-    6: { open: "10:00", close: "14:00" }
+    0: { open: "13:00", close: "18:00" },
+    1: null,
+    2: { open: "13:00", close: "18:00" },
+    3: { open: "13:00", close: "18:00" },
+    4: { open: "13:00", close: "18:00" },
+    5: { open: "13:00", close: "18:00" },
+    6: { open: "13:00", close: "18:00" }
   }
 };
 
@@ -32,66 +32,57 @@ const STORE = {
 
 const PRODUCTS = [
   {
-    id: "tradicional",
-    name: "Cookie Tradicional",
-    category: "Clássicos",
-    description: "Massa artesanal amanteigada com gotas de chocolate.",
-    price: 10,
-    stock: 10,
-    image: ""
-  },
-  {
     id: "nutella",
     name: "Cookie Nutella",
     category: "Recheados",
     description: "Cookie artesanal com recheio cremoso de Nutella.",
-    price: 12,
-    stock: 8,
-    image: ""
-  },
-  {
-    id: "oreo",
-    name: "Cookie Oreo",
-    category: "Especiais",
-    description: "Massa com pedaços de Oreo e recheio cremoso.",
-    price: 12,
-    stock: 6,
-    image: ""
-  },
-  {
-    id: "black-white",
-    name: "Cookie Black White",
-    category: "Especiais",
-    description: "Combinação intensa de chocolate com recheio branco.",
-    price: 12,
-    stock: 4,
-    image: ""
-  },
-  {
-    id: "red-velvet",
-    name: "Cookie Red Velvet",
-    category: "Especiais",
-    description: "Massa red velvet macia e recheio branco cremoso.",
-    price: 12,
-    stock: 5,
+    price: 10,
+    stock: null,
     image: ""
   },
   {
     id: "ninho-nutella",
     name: "Cookie Ninho c/ Nutella",
     category: "Recheados",
-    description: "A combinação de leite Ninho com Nutella em um cookie irresistível.",
-    price: 13,
-    stock: 5,
+    description: "Massa artesanal com leite Ninho e recheio cremoso de Nutella.",
+    price: 10,
+    stock: null,
     image: ""
   },
   {
-    id: "brookie",
-    name: "Brookie Nutella",
-    category: "Premium",
-    description: "Cookie com brownie e recheio cremoso de Nutella.",
-    price: 15,
-    stock: 4,
+    id: "red-velvet",
+    name: "Cookie Red Velvet",
+    category: "Especiais",
+    description: "Massa red velvet macia com recheio branco cremoso.",
+    price: 10,
+    stock: null,
+    image: ""
+  },
+  {
+    id: "black-white",
+    name: "Cookie Black & White",
+    category: "Especiais",
+    description: "Cookie de chocolate com recheio branco cremoso.",
+    price: 10,
+    stock: null,
+    image: ""
+  },
+  {
+    id: "oreo",
+    name: "Cookie Oreo",
+    category: "Especiais",
+    description: "Massa artesanal com pedaços de biscoito Oreo e recheio cremoso.",
+    price: 10,
+    stock: null,
+    image: ""
+  },
+  {
+    id: "ovomaltine",
+    name: "Cookie Ovomaltine",
+    category: "Especiais",
+    description: "Cookie crocante e cremoso com o sabor marcante de Ovomaltine.",
+    price: 11,
+    stock: null,
     image: ""
   },
   {
@@ -99,17 +90,26 @@ const PRODUCTS = [
     name: "Cookie Pistachela",
     category: "Premium",
     description: "Massa com chocolate branco e pistache, recheada com creme de pistache.",
-    price: 16,
-    stock: 3,
+    price: 15,
+    stock: null,
     image: ""
   },
   {
-    id: "ovomaltine",
-    name: "Cookie Ovomaltine",
+    id: "brookie",
+    name: "Brookie Nutella",
     category: "Premium",
-    description: "Cookie crocante e cremoso com o sabor marcante de Ovomaltine.",
-    price: 15,
-    stock: 0,
+    description: "Cookie com recheio de brownie e Nutella.",
+    price: 12,
+    stock: null,
+    image: ""
+  },
+  {
+    id: "kinder",
+    name: "Cookie Kinder",
+    category: "Premium",
+    description: "Cookie artesanal inspirado no chocolate Kinder, com recheio cremoso.",
+    price: 12,
+    stock: null,
     image: ""
   }
 ];
@@ -194,6 +194,7 @@ function renderFilters() {
 }
 
 function stockText(product) {
+  if (product.stock === null) return { text: "Disponível", className: "" };
   if (product.stock <= 0) return { text: "Esgotado", className: "out" };
   if (product.stock <= 3) return { text: `Últimas ${product.stock} unidades`, className: "low" };
   return { text: `${product.stock} disponíveis`, className: "" };
@@ -223,8 +224,8 @@ function renderProducts() {
           <div class="product-footer">
             <strong class="product-price">${money(product.price)}</strong>
             <button class="add-button" type="button" data-product="${product.id}"
-              ${product.stock <= 0 ? "disabled" : ""}>
-              ${product.stock <= 0 ? "Esgotado" : "Adicionar"}
+              ${product.stock !== null && product.stock <= 0 ? "disabled" : ""}>
+              ${product.stock !== null && product.stock <= 0 ? "Esgotado" : "Adicionar"}
             </button>
           </div>
         </div>
@@ -241,7 +242,7 @@ function addToCart(id) {
   const product = PRODUCTS.find(item => item.id === id);
   const current = cart[id] || 0;
 
-  if (current >= product.stock) {
+  if (product.stock !== null && current >= product.stock) {
     alert(`Só temos ${product.stock} unidade(s) disponível(is) de ${product.name}.`);
     return;
   }
@@ -256,7 +257,7 @@ function changeQuantity(id, amount) {
 
   if (next <= 0) {
     delete cart[id];
-  } else if (next <= product.stock) {
+  } else if (product.stock === null || next <= product.stock) {
     cart[id] = next;
   }
   updateCart();
