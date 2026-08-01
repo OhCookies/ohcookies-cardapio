@@ -54,10 +54,10 @@
           </div>
         </article>
         <article>
-          <span>📍</span>
+          <span>⏱️</span>
           <div>
-            <strong>Retirada</strong>
-            <small>Maria Paula — Niterói/RJ</small>
+            <strong>Prazo de preparo</strong>
+            <small>Cerca de 30 minutos após a confirmação</small>
           </div>
         </article>
         <article>
@@ -156,7 +156,10 @@
 
           <label>
             Horário desejado
-            <input id="orderTime" type="time" />
+            <select id="orderTime">
+              <option value="">Escolha primeiro a data</option>
+            </select>
+            <small id="timeHelp" class="field-help">Horários disponíveis de terça a domingo, das 13h às 18h.</small>
           </label>
 
           <fieldset>
@@ -201,6 +204,7 @@
           </label>
 
           <p class="delivery-note">
+            <strong>Prazo de preparo:</strong> cerca de 30 minutos após a confirmação do pedido.<br><br>
             A taxa de entrega não está incluída no total. Ela varia conforme endereço, horário e disponibilidade do aplicativo.
           </p>
 

@@ -143,3 +143,13 @@ Regras:
 - `Esgotado`: bloqueia o produto;
 - `Pausado`: mostra o produto como indisponível;
 - não altere os valores da coluna `ID`.
+
+
+## Prazo de preparo
+
+O cardápio informa que o pedido fica pronto em cerca de 30 minutos após a confirmação. Essa informação também é enviada na mensagem do WhatsApp.
+
+
+## Escolha de horário
+
+O cliente escolhe horários em intervalos de 30 minutos, somente de terça a domingo, das 13h às 18h. Para pedidos no mesmo dia, o sistema considera 30 minutos de preparo e não exibe horários que já passaram. Segundas-feiras ficam bloqueadas.

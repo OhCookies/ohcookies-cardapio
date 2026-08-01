@@ -8,7 +8,9 @@ const STORE = {
   timezone: "America/Sao_Paulo",
   instagram: "@ohcookie.s",
   minimumOrder: 0,
-  creditCardFeeRate: 0.042, // taxa descontada sobre o valor total cobrado
+  creditCardFeeRate: 0.042,
+  preparationMinutes: 30,
+  slotIntervalMinutes: 30, // taxa descontada sobre o valor total cobrado
   inventoryCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-sfB08jUIJaKm2mCpajcdJnIXrdfhbHbaF4ve3ZsnQLzlc48uK4wOxaK-tmvaZhWEzMFHd6Ek2M1l/pub?gid=292180600&single=true&output=csv",
   inventoryRefreshMinutes: 2,
   openingHours: {
@@ -578,6 +580,7 @@ function finishOrder() {
       : []),
     `*Data desejada:* ${formattedDate}`,
     `*Horário desejado:* ${document.getElementById("orderTime").value}`,
+    `*Prazo de preparo:* cerca de 30 minutos após a confirmação`,
     `*Recebimento:* ${delivery}`,
     `*Pagamento:* ${document.getElementById("paymentMethod").value}`
   ];
@@ -603,14 +606,87 @@ function finishOrder() {
   window.open(url, "_blank", "noopener,noreferrer");
 }
 
-function setMinimumDate() {
-  const today = new Intl.DateTimeFormat("en-CA", {
+function formatDateISOInStore(date = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", {
     timeZone: STORE.timezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit"
-  }).format(new Date());
-  document.getElementById("orderDate").min = today;
+  }).format(date);
+}
+
+function getWeekdayForDate(dateString) {
+  const date = new Date(`${dateString}T12:00:00`);
+  return date.getDay();
+}
+
+function roundUpToInterval(totalMinutes, interval) {
+  return Math.ceil(totalMinutes / interval) * interval;
+}
+
+function buildAvailableTimes() {
+  const dateInput = document.getElementById("orderDate");
+  const timeSelect = document.getElementById("orderTime");
+  const help = document.getElementById("timeHelp");
+  const dateValue = dateInput.value;
+
+  timeSelect.innerHTML = "";
+
+  if (!dateValue) {
+    timeSelect.innerHTML = '<option value="">Escolha primeiro a data</option>';
+    help.textContent = "Horários disponíveis de terça a domingo, das 13h às 18h.";
+    return;
+  }
+
+  const weekday = getWeekdayForDate(dateValue);
+  const schedule = STORE.openingHours[weekday];
+
+  if (!schedule) {
+    timeSelect.innerHTML = '<option value="">Não atendemos nesta data</option>';
+    help.textContent = "Não atendemos às segundas-feiras. Escolha outra data.";
+    return;
+  }
+
+  let start = minutes(schedule.open);
+  const end = minutes(schedule.close);
+  const today = formatDateISOInStore();
+
+  if (dateValue === today) {
+    const storeNow = getStoreTime();
+    const [currentHour, currentMinute] = storeNow.time.split(":").map(Number);
+    const earliest = roundUpToInterval(
+      currentHour * 60 + currentMinute + STORE.preparationMinutes,
+      STORE.slotIntervalMinutes
+    );
+    start = Math.max(start, earliest);
+  }
+
+  const options = [];
+  for (let total = start; total <= end; total += STORE.slotIntervalMinutes) {
+    const hour = String(Math.floor(total / 60)).padStart(2, "0");
+    const minute = String(total % 60).padStart(2, "0");
+    const value = `${hour}:${minute}`;
+    options.push(`<option value="${value}">${value}</option>`);
+  }
+
+  if (!options.length) {
+    timeSelect.innerHTML = '<option value="">Sem horários disponíveis hoje</option>';
+    help.textContent = "O atendimento de hoje foi encerrado. Escolha outra data.";
+    return;
+  }
+
+  timeSelect.innerHTML = '<option value="">Selecione um horário</option>' + options.join("");
+  help.textContent = dateValue === today
+    ? "Os horários já consideram cerca de 30 minutos para o preparo."
+    : `Horários disponíveis das ${schedule.open} às ${schedule.close}.`;
+}
+
+function setMinimumDate() {
+  const today = formatDateISOInStore();
+  const dateInput = document.getElementById("orderDate");
+  dateInput.min = today;
+  dateInput.addEventListener("change", buildAvailableTimes);
+  buildAvailableTimes();
 }
 
 document.getElementById("cartShortcut").addEventListener("click", openCart);
