@@ -8,7 +8,7 @@ const STORE = {
   timezone: "America/Sao_Paulo",
   instagram: "@ohcookie.s",
   minimumOrder: 0,
-  creditCardFeeRate: 0.042,
+  creditCardFeeRate: 0.0498,
   preparationMinutes: 30,
   slotIntervalMinutes: 30, // taxa descontada sobre o valor total cobrado
   inventoryCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT-sfB08jUIJaKm2mCpajcdJnIXrdfhbHbaF4ve3ZsnQLzlc48uK4wOxaK-tmvaZhWEzMFHd6Ek2M1l/pub?gid=292180600&single=true&output=csv",
@@ -448,7 +448,7 @@ function updatePaymentTotals() {
   const items = cartSummary();
   const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
   const payment = document.getElementById("paymentMethod")?.value || "";
-  const isCreditCard = payment === "Cartão de crédito (taxa de 4,2%)";
+  const isCreditCard = payment === "Cartão de crédito (taxa de 4,98%)";
   const finalTotal = isCreditCard ? subtotal / (1 - STORE.creditCardFeeRate) : subtotal;
   const fee = finalTotal - subtotal;
 
@@ -574,7 +574,7 @@ function finishOrder() {
     `*Total dos produtos:* ${money(totals.subtotal)}`,
     ...(totals.isCreditCard
       ? [
-          `*Taxa do cartão (4,2%):* ${money(totals.fee)}`,
+          `*Taxa do cartão (4,98%):* ${money(totals.fee)}`,
           `*Total com cartão:* ${money(totals.finalTotal)}`
         ]
       : []),
@@ -596,7 +596,7 @@ function finishOrder() {
 
   lines.push(
     "",
-    ...(totals.isCreditCard ? ["_Pagamento no cartão inclui taxa de 4,2%._"] : []),
+    ...(totals.isCreditCard ? ["_Pagamento no cartão inclui taxa de 4,98%._"] : []),
     "_A taxa de entrega será confirmada separadamente._",
     "",
     "Aguardo a confirmação do pedido 😊"

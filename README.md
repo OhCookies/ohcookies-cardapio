@@ -54,10 +54,10 @@ O pedido é finalizado pelo WhatsApp, portanto o estoque não é descontado auto
 
 ## Taxa do cartão
 
-Quando o cliente seleciona **Cartão de crédito (taxa de 4,2%)**, o cardápio calcula automaticamente:
+Quando o cliente seleciona **Cartão de crédito (taxa de 4,98%)**, o cardápio calcula automaticamente:
 
 - total dos produtos;
-- taxa de 4,2%;
+- taxa de 4,98%;
 - total final no cartão.
 
 Esses valores também são enviados na mensagem do WhatsApp.
@@ -121,7 +121,7 @@ As descrições dos sabores foram revisadas e padronizadas conforme as informaç
 
 ## Cálculo corrigido da taxa do cartão
 
-Para receber o valor integral dos produtos após o desconto de 4,2%, o total no cartão é calculado por dentro:
+Para receber o valor integral dos produtos após o desconto de 4,98%, o total no cartão é calculado por dentro:
 
 `valor no cartão = valor dos produtos / (1 - 0,042)`
 
@@ -153,3 +153,10 @@ O cardápio informa que o pedido fica pronto em cerca de 30 minutos após a conf
 ## Escolha de horário
 
 O cliente escolhe horários em intervalos de 30 minutos, somente de terça a domingo, das 13h às 18h. Para pedidos no mesmo dia, o sistema considera 30 minutos de preparo e não exibe horários que já passaram. Segundas-feiras ficam bloqueadas.
+
+
+## Taxa do cartão atualizada — 4,98%
+
+O valor do cartão é calculado por dentro, para que a Ohcookies receba líquido o total dos produtos após o desconto da operadora.
+
+Exemplo: para receber R$ 200,00, o sistema cobra R$ 210,48.
